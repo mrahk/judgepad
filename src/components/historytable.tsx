@@ -12,16 +12,28 @@ const HistoryTable: React.FC = () => {
   const current = useSelector((state: RootState) => state.current);
   const labels = useSelector((state: RootState) => state.labels);
 
-  const header = _.range(0, scores.length).map((i) => (
+  const filteredHistory = scores.filter((card) => card.eventId === labels.id);
+  const allScores = [...filteredHistory.map((card) => card.scores), current];
+
+  const header = _.range(0, allScores.length - 1).map((i) => (
     <th key={i}>
       {t("historyTable.team")} {i + 1}
     </th>
   ));
   header.push(<th key="current">{t("historyTable.current")}</th>);
-  const allScores = [...scores, current];
+
+  const isCounter = (index: number): boolean => {
+    if (labels.id === "dantai_intl") return index <= 2;
+    if (labels.id === "tenkai_intl_main") return index <= 3;
+    if (labels.id === "tenkai_intl_sub") return index === 0;
+    return false;
+  };
+
   const rows = _.range(0, allScores[0].length).map((i) =>
     allScores.map((score, j) => (
-      <td key={`score${j}${i}`}>{score[i].value}</td>
+      <td key={`score${j}${i}`}>
+        {isCounter(i) ? score[i].value.toFixed(0) : score[i].value.toFixed(1)}
+      </td>
     )),
   );
   const rowDivs = rows
@@ -38,12 +50,12 @@ const HistoryTable: React.FC = () => {
       ));
   const totals = allScores.map((team, i) => (
     <td key={`total${i}`}>
-      <em>{Score.calcTotal(team)}</em>
+      <em>{Score.calcTotal(team, labels).toFixed(1)}</em>
     </td>
   ));
   const standings = allScores.map((team, i) => (
     <td key={`standing${i}`}>
-      <strong>{Score.getStanding(allScores, team)}</strong>
+      <strong>{Score.getStanding(filteredHistory, team, labels)}</strong>
     </td>
   ));
 

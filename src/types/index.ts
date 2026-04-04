@@ -15,6 +15,11 @@ export interface Row {
   value: number;
 }
 
+export interface ScoreCard {
+  scores: Row[];
+  eventId: string;
+}
+
 export interface Labels {
   id: string;
   name: string;
@@ -30,6 +35,7 @@ export interface Alert {
 interface AddScoreAction {
   type: typeof ADD_SCORE;
   scores: Row[];
+  eventId: string;
 }
 
 interface UpdateCurrentAction {

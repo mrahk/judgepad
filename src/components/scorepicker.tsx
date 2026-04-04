@@ -7,13 +7,18 @@ interface ScorePickerProps {
   value: number;
   handleValueChange: (id: number, value: number) => void;
   isExtra?: boolean;
+  customValues?: number[];
 }
 
 const ScorePicker: React.FC<ScorePickerProps> = (props) => {
   const handleChange = (value: number) =>
     props.handleValueChange(props.id, value);
 
-  const values = props.isExtra ? [-0.5, 0, 0.5] : [...Array(11).keys()];
+  const values = props.customValues
+    ? props.customValues
+    : props.isExtra
+      ? [-0.5, 0, 0.5]
+      : [...Array(11).keys()];
 
   const buttons = values.map((i) => (
     <Button
@@ -24,7 +29,7 @@ const ScorePicker: React.FC<ScorePickerProps> = (props) => {
       active={props.value === i}
       onClick={() => handleChange(i)}
     >
-      {i}
+      {i.toFixed(1)}
     </Button>
   ));
 

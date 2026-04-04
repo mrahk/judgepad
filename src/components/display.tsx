@@ -13,6 +13,7 @@ const ScoreDisplay: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const scores = useSelector((state: RootState) => state.scores);
+  const labels = useSelector((state: RootState) => state.labels);
   const [isUndoing, setIsUndoing] = useState(false);
 
   useEffect(() => {
@@ -23,9 +24,10 @@ const ScoreDisplay: React.FC = () => {
   }, [isUndoing, navigate, dispatch]);
 
   const isNav = searchParams.get("navigation");
-  const rows = scores[scores.length - 1];
-  const score = rows
-    ? Math.round(Score.calcTotal(rows) * 10) / 10
+  const filteredHistory = scores.filter((card) => card.eventId === labels.id);
+  const latestCard = filteredHistory[filteredHistory.length - 1];
+  const score = latestCard
+    ? Score.calcTotal(latestCard.scores, labels).toFixed(1)
     : t("display.notApplicable");
   const buttons = isNav ? (
     ""

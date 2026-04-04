@@ -21,6 +21,38 @@
       "Additional point"
     ]
   },
+  "dantaiIntlLabels": {
+    "name": "Dantai Hokei (Intl)",
+    "labels": [
+      "Lost Synchronization (-0.1)",
+      "Mistakes in Basic Techniques (-0.1)",
+      "Balance / Order / Direction (-0.3)",
+      "Rank (7.5 - 9.0)",
+      "Handspring (+0.2)",
+      "One-hand Cartwheel (+0.2)",
+      "Somersault (+0.4)",
+      "Twisted Somersault (+0.8)"
+    ]
+  },
+  "tenkaiIntlMainLabels": {
+    "name": "Tenkai (Intl) Main",
+    "labels": [
+      "Basic Tech Mistakes (-0.2)",
+      "Kimegi Accuracy (-1.0)",
+      "No effect (-1.0)",
+      "Limited effect (-0.5)",
+      "Rank (7.0 - 10.0)"
+    ]
+  },
+  "tenkaiIntlSubLabels": {
+    "name": "Tenkai (Intl) Sub",
+    "labels": [
+      "Basic Tech Mistakes (-0.1)",
+      "Times Performing Tech (-0.5 to -1.0)",
+      "Final Tech (-0.5 to -1.0)",
+      "Rank (7.0 - 10.0)"
+    ]
+  },
   "navigation": {
     "scoring": "Scoring",
     "history": "History",
@@ -104,7 +136,8 @@
     "currentStanding": "Current standing",
     "clear": "Clear",
     "saveAndDisplay": "Save and display",
-    "equalPointsNotPossibleToSave": "Equal points not possible to save!"
+    "equalPointsNotPossibleToSave": "The total score is equal to a score given also to another team",
+    "tenkaiTieWarning": "Points match a previous team! Please adjust the rank value to avoid a tie."
   },
   "submit": {
     "saved": "Saved"

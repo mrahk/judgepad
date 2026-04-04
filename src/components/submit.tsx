@@ -27,17 +27,19 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
   const dispatch = useDispatch();
   const rows = useSelector((state: RootState) => state.current);
   const history = useSelector((state: RootState) => state.scores);
+  const labels = useSelector((state: RootState) => state.labels);
 
   const handleClick = () => {
     setIsSaving(true);
-    dispatch(Actions.addScore(rows));
+    dispatch(Actions.addScore(rows, labels.id));
     const id = uuidv4();
     dispatch(Actions.addAlert(t("submit.saved"), "alert alert-success", id));
     setTimeout(() => dispatch(Actions.removeAlert(id)), 2000);
     navigate(nextPage);
   };
 
-  const disabled = Score.isTie(history, rows);
+  const isTie = Score.isTie(history, rows, labels);
+  const disabled = isTie && labels.id !== "dantai_intl" && labels.id !== "dantai";
   return (
     <Button className={className} onClick={handleClick} disabled={disabled}>
       {children}

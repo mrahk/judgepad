@@ -10,7 +10,7 @@ import {
   ADD_ALERT,
   REMOVE_ALERT,
 } from "../actions";
-import { AppAction, Row, Labels, Alert } from "../types";
+import { AppAction, Row, Labels, Alert, ScoreCard } from "../types";
 
 const defaultRows: Row[] = [
   { key: 0, id: 0, value: 0 },
@@ -19,6 +19,10 @@ const defaultRows: Row[] = [
   { key: 3, id: 3, value: 0 },
   { key: 4, id: 4, value: 0 },
   { key: 5, id: 5, value: 0 },
+  { key: 6, id: 6, value: 0 },
+  { key: 7, id: 7, value: 0 },
+  { key: 8, id: 8, value: 0 },
+  { key: 9, id: 9, value: 0 },
 ];
 
 const defaultLabels: Labels = {
@@ -42,16 +46,17 @@ const currentCard = (
     case UPDATE_CURRENT:
       return action.rows;
     case CLEAR_CURRENT:
+    case CHANGE_LABELS:
       return _.cloneDeep(defaultRows);
     default:
       return state;
   }
 };
 
-const scoreCards = (state: Row[][] = [], action: AppAction): Row[][] => {
+const scoreCards = (state: ScoreCard[] = [], action: AppAction): ScoreCard[] => {
   switch (action.type) {
     case ADD_SCORE:
-      return [...state, action.scores];
+      return [...state, { scores: action.scores, eventId: action.eventId }];
     case CLEAR_SCORES:
       return [];
     case UNDO_LAST_SCORE:

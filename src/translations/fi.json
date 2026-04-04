@@ -21,6 +21,38 @@
       "Lisäpiste"
     ]
   },
+  "dantaiIntlLabels": {
+    "name": "Dantai Hokei (Kansainvälinen)",
+    "labels": [
+      "Samanaikaisuusvirhe (-0.1)",
+      "Perustekniikkavirhe (-0.1)",
+      "Tasapaino / Järjestys / Suunta (-0.3)",
+      "Tasoarvio (7.5 - 9.0)",
+      "Puolivoltti (+0.2)",
+      "Yhden käden sokuten (+0.2)",
+      "Kokovoltti (+0.4)",
+      "Kierteellinen voltti (+0.8)"
+    ]
+  },
+  "tenkaiIntlMainLabels": {
+    "name": "Tenkai (Päätuomari)",
+    "labels": [
+      "Perustekniikkavirhe (-0.2)",
+      "Kimegin tarkkuus (-1.0)",
+      "Ei vaikutusta (-1.0)",
+      "Rajallinen vaikutus (-0.5)",
+      "Tasoarvio (7.0 - 10.0)"
+    ]
+  },
+  "tenkaiIntlSubLabels": {
+    "name": "Tenkai (Sivutuomari)",
+    "labels": [
+      "Perustekniikkavirhe (-0.1)",
+      "Tehtyjen tekniikoiden määrä (-0.5 - -1.0)",
+      "Ratkaisutekniikka (-0.5 - -1.0)",
+      "Tasoarvio (7.0 - 10.0)"
+    ]
+  },
   "navigation": {
     "scoring": "Pisteytys",
     "history": "Historia",
@@ -104,7 +136,8 @@
     "currentStanding": "Tämänhetkinen sijoitus",
     "clear": "Tyhjennä",
     "saveAndDisplay": "Tallenna ja näytä",
-    "equalPointsNotPossibleToSave": "Tasapisteet, et voi tallentaa!"
+    "equalPointsNotPossibleToSave": "Kokonaispisteet ovat samat kuin aiemmalla joukkueella",
+    "tenkaiTieWarning": "Pisteet samat kuin aiemmalla joukkueella! Säädä tasoarviota välttääksesi tasatuloksen."
   },
   "submit": {
     "saved": "Tallennettu"

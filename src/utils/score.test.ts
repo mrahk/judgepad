@@ -1,107 +1,153 @@
 import { describe, it, expect } from "vitest";
-import Score from "./score.js";
+import Score from "./score";
+import { Labels, ScoreCard } from "../types";
 
 describe("Score utility", () => {
+  const dantaiLabels: Labels = { id: "dantai", name: "Dantai", labels: [] };
+  const dantaiIntlLabels: Labels = { id: "dantai_intl", name: "Dantai Intl", labels: [] };
+  const tenkaiMainLabels: Labels = { id: "tenkai_intl_main", name: "Tenkai Main", labels: [] };
+
   describe("calcTotal", () => {
-    it("calculates the total score correctly based on its unique logic", () => {
+    it("calculates the total score correctly for legacy dantai", () => {
       const rows = [
-        { value: 1 },
-        { value: 2 },
-        { value: 3 },
-        { value: 4 },
-        { value: 5 },
-        { value: 0.5 },
+        { id: 0, key: 0, value: 1 },
+        { id: 1, key: 1, value: 2 },
+        { id: 2, key: 2, value: 3 },
+        { id: 3, key: 3, value: 4 },
+        { id: 4, key: 4, value: 5 },
+        { id: 5, key: 5, value: 0.5 },
       ];
-      // The function incorrectly uses parseFloat and divides by 5
       const expected = (1 + 2 + 3 + 4 + 5 + 0.5) / 5;
-      expect(Score.calcTotal(rows)).toBe(expected);
+      expect(Score.calcTotal(rows, dantaiLabels)).toBe(expected);
     });
 
-    it("handles an empty array by throwing an error", () => {
-      // The function will throw an error because reduce is called on an empty array without an initial value
-      expect(() => Score.calcTotal([])).toThrow();
+    it("calculates the total score correctly for Dantai Intl", () => {
+      const rows = [
+        { id: 0, key: 0, value: 2 }, // Lost Sync: 2 * 0.1 = 0.2
+        { id: 1, key: 1, value: 3 }, // Basic Tech: 3 * 0.1 = 0.3
+        { id: 2, key: 2, value: 1 }, // Balance: 1 * 0.3 = 0.3
+        { id: 3, key: 3, value: 8.5 }, // Rank
+        { id: 4, key: 4, value: 0.2 }, // Handspring bonus
+        { id: 5, key: 5, value: 0.2 }, // Cartwheel bonus
+        { id: 6, key: 6, value: 0 }, // Somersault bonus
+        { id: 7, key: 7, value: 0.8 }, // Twisted bonus
+      ];
+      expect(Score.calcTotal(rows, dantaiIntlLabels)).toBeCloseTo(8.9);
     });
   });
 
   describe("getStanding", () => {
-    const history = [
-      [
-        { value: 1 },
-        { value: 2 },
-        { value: 3 },
-        { value: 4 },
-        { value: 5 },
-        { value: 0 },
-      ], // Total: 15, calcTotal: 3
-      [
-        { value: 2 },
-        { value: 2 },
-        { value: 3 },
-        { value: 4 },
-        { value: 5 },
-        { value: 0 },
-      ], // Total: 16, calcTotal: 3.2
+    const history: ScoreCard[] = [
+      {
+        eventId: "dantai",
+        scores: [
+          { id: 0, key: 0, value: 1 },
+          { id: 1, key: 1, value: 2 },
+          { id: 2, key: 2, value: 3 },
+          { id: 3, key: 3, value: 4 },
+          { id: 4, key: 4, value: 5 },
+          { id: 5, key: 5, value: 0 },
+        ], // Total: 3
+      },
+      {
+        eventId: "tenkai",
+        scores: [
+          { id: 0, key: 0, value: 10 },
+          { id: 1, key: 1, value: 10 },
+          { id: 2, key: 2, value: 10 },
+          { id: 3, key: 3, value: 10 },
+          { id: 4, key: 4, value: 10 },
+          { id: 5, key: 5, value: 0 },
+        ], // Total: 10 (different event)
+      },
+      {
+        eventId: "dantai",
+        scores: [
+          { id: 0, key: 0, value: 2 },
+          { id: 1, key: 1, value: 2 },
+          { id: 2, key: 2, value: 3 },
+          { id: 3, key: 3, value: 4 },
+          { id: 4, key: 4, value: 5 },
+          { id: 5, key: 5, value: 0 },
+        ], // Total: 3.2
+      },
     ];
 
-    it("returns the correct standing for a new score", () => {
+    it("returns the correct standing within the same event type", () => {
       const newScore = [
-        { value: 1 },
-        { value: 1 },
-        { value: 1 },
-        { value: 1 },
-        { value: 1 },
-        { value: 0 },
-      ]; // Total: 5, calcTotal: 1
-      expect(Score.getStanding(history, newScore)).toBe(3);
+        { id: 0, key: 0, value: 1 },
+        { id: 1, key: 1, value: 1 },
+        { id: 2, key: 2, value: 1 },
+        { id: 3, key: 3, value: 1 },
+        { id: 4, key: 4, value: 1 },
+        { id: 5, key: 5, value: 0 },
+      ]; // Total: 1
+      expect(Score.getStanding(history, newScore, dantaiLabels)).toBe(3);
     });
 
-    it("returns 1 for the highest score", () => {
+    it("is not affected by scores in other event types", () => {
       const newScore = [
-        { value: 3 },
-        { value: 3 },
-        { value: 3 },
-        { value: 4 },
-        { value: 5 },
-        { value: 0 },
-      ]; // Total: 18, calcTotal: 3.6
-      expect(Score.getStanding(history, newScore)).toBe(1);
+        { id: 0, key: 0, value: 5 },
+        { id: 1, key: 1, value: 5 },
+        { id: 2, key: 2, value: 5 },
+        { id: 3, key: 3, value: 5 },
+        { id: 4, key: 4, value: 5 },
+        { id: 5, key: 5, value: 0 },
+      ]; // Total: 5 (Higher than dantai scores, lower than tenkai score)
+      expect(Score.getStanding(history, newScore, dantaiLabels)).toBe(1);
     });
   });
 
   describe("isTie", () => {
-    const history = [
-      [
-        { value: 1 },
-        { value: 2 },
-        { value: 3 },
-        { value: 4 },
-        { value: 5 },
-        { value: 0 },
-      ], // Total: 15, calcTotal: 3
+    const history: ScoreCard[] = [
+      {
+        eventId: "dantai",
+        scores: [
+          { id: 0, key: 0, value: 1 },
+          { id: 1, key: 1, value: 2 },
+          { id: 2, key: 2, value: 3 },
+          { id: 3, key: 3, value: 4 },
+          { id: 4, key: 4, value: 5 },
+          { id: 5, key: 5, value: 0 },
+        ], // Total: 3
+      },
     ];
 
-    it("returns true if there is a tie", () => {
+    it("returns true if there is a tie in the same event", () => {
       const newScore = [
-        { value: 1 },
-        { value: 2 },
-        { value: 3 },
-        { value: 4 },
-        { value: 5 },
-        { value: 0 },
-      ]; // Total: 15, calcTotal: 3
-      expect(Score.isTie(history, newScore)).toBe(true);
+        { id: 0, key: 0, value: 1 },
+        { id: 1, key: 1, value: 2 },
+        { id: 2, key: 2, value: 3 },
+        { id: 3, key: 3, value: 4 },
+        { id: 4, key: 4, value: 5 },
+        { id: 5, key: 5, value: 0 },
+      ]; // Total: 3
+      expect(Score.isTie(history, newScore, dantaiLabels)).toBe(true);
     });
 
-    it("returns false if there is no tie", () => {
+    it("returns false if there is a tie only in a different event", () => {
+      const tenkaiHistory: ScoreCard[] = [
+        {
+          eventId: "tenkai",
+          scores: [
+            { id: 0, key: 0, value: 1 },
+            { id: 1, key: 1, value: 2 },
+            { id: 2, key: 2, value: 3 },
+            { id: 3, key: 3, value: 4 },
+            { id: 4, key: 4, value: 5 },
+            { id: 5, key: 5, value: 0 },
+          ], // Total: 3 (different event)
+        }
+      ];
       const newScore = [
-        { value: 2 },
-        { value: 2 },
-        { value: 3 },
-        { value: 4 },
-        { value: 5 },
-        { value: 0 },
-      ]; // Total: 16, calcTotal: 3.2
-      expect(Score.isTie(history, newScore)).toBe(false);
+        { id: 0, key: 0, value: 1 },
+        { id: 1, key: 1, value: 2 },
+        { id: 2, key: 2, value: 3 },
+        { id: 3, key: 3, value: 4 },
+        { id: 4, key: 4, value: 5 },
+        { id: 5, key: 5, value: 0 },
+      ]; // Total: 3
+      expect(Score.isTie(tenkaiHistory, newScore, dantaiLabels)).toBe(false);
     });
   });
 });

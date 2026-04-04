@@ -20,8 +20,8 @@ export function clearCurrent(): AppAction {
   return { type: CLEAR_CURRENT };
 }
 
-export function addScore(scoreCard: Row[]): AppAction {
-  return { type: ADD_SCORE, scores: scoreCard };
+export function addScore(scoreCard: Row[], eventId: string): AppAction {
+  return { type: ADD_SCORE, scores: scoreCard, eventId };
 }
 
 export function clearScores(): AppAction {

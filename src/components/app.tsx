@@ -33,13 +33,63 @@ const App: React.FC = () => {
     [t],
   );
 
+  const dantaiIntlLabels: Labels = useMemo(
+    () => ({
+      id: "dantai_intl",
+      name: t("dantaiIntlLabels.name"),
+      labels: t("dantaiIntlLabels.labels", { returnObjects: true }),
+    }),
+    [t],
+  );
+
+  const tenkaiIntlMainLabels: Labels = useMemo(
+    () => ({
+      id: "tenkai_intl_main",
+      name: t("tenkaiIntlMainLabels.name"),
+      labels: t("tenkaiIntlMainLabels.labels", { returnObjects: true }),
+    }),
+    [t],
+  );
+
+  const tenkaiIntlSubLabels: Labels = useMemo(
+    () => ({
+      id: "tenkai_intl_sub",
+      name: t("tenkaiIntlSubLabels.name"),
+      labels: t("tenkaiIntlSubLabels.labels", { returnObjects: true }),
+    }),
+    [t],
+  );
+
   useEffect(() => {
-    if (labels.id === "dantai") {
-      dispatch(Actions.changeLabels(dantaiLabels));
-    } else {
-      dispatch(Actions.changeLabels(tenkaiLabels));
+    switch (labels.id) {
+      case "dantai":
+        dispatch(Actions.changeLabels(dantaiLabels));
+        break;
+      case "tenkai":
+        dispatch(Actions.changeLabels(tenkaiLabels));
+        break;
+      case "dantai_intl":
+        dispatch(Actions.changeLabels(dantaiIntlLabels));
+        break;
+      case "tenkai_intl_main":
+        dispatch(Actions.changeLabels(tenkaiIntlMainLabels));
+        break;
+      case "tenkai_intl_sub":
+        dispatch(Actions.changeLabels(tenkaiIntlSubLabels));
+        break;
+      default:
+        break;
     }
-  }, [i18n.language, dantaiLabels, tenkaiLabels, dispatch, labels.id]);
+  }, [
+    i18n.language,
+    dantaiLabels,
+    tenkaiLabels,
+    dantaiIntlLabels,
+    tenkaiIntlMainLabels,
+    tenkaiIntlSubLabels,
+    dispatch,
+    labels.id,
+  ]);
 
   const handleDropdownAction = (key: string | null) => {
     switch (key) {
@@ -48,6 +98,15 @@ const App: React.FC = () => {
         break;
       case "tenkai":
         dispatch(Actions.changeLabels(tenkaiLabels));
+        break;
+      case "dantai_intl":
+        dispatch(Actions.changeLabels(dantaiIntlLabels));
+        break;
+      case "tenkai_intl_main":
+        dispatch(Actions.changeLabels(tenkaiIntlMainLabels));
+        break;
+      case "tenkai_intl_sub":
+        dispatch(Actions.changeLabels(tenkaiIntlSubLabels));
         break;
       case "cancel":
         dispatch(Actions.undoLastScore());
@@ -133,6 +192,25 @@ const App: React.FC = () => {
                   active={labels.id === "tenkai"}
                 >
                   {t("tenkaiLabels.name")}
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item
+                  eventKey={"dantai_intl"}
+                  active={labels.id === "dantai_intl"}
+                >
+                  {t("dantaiIntlLabels.name")}
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  eventKey={"tenkai_intl_main"}
+                  active={labels.id === "tenkai_intl_main"}
+                >
+                  {t("tenkaiIntlMainLabels.name")}
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  eventKey={"tenkai_intl_sub"}
+                  active={labels.id === "tenkai_intl_sub"}
+                >
+                  {t("tenkaiIntlSubLabels.name")}
                 </NavDropdown.Item>
               </NavDropdown>
             </Nav>
