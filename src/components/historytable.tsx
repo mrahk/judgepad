@@ -26,10 +26,11 @@ const HistoryTable: React.FC = () => {
     if (labels.id === "dantai_intl") return index <= 2;
     if (labels.id === "tenkai_intl_main") return index <= 3;
     if (labels.id === "tenkai_intl_sub") return index === 0;
+    if (labels.id === "dantai" || labels.id === "tenkai") return index <= 4;
     return false;
   };
 
-  const rows = _.range(0, allScores[0].length).map((i) =>
+  const rows = _.range(0, labels.labels.length).map((i) =>
     allScores.map((score, j) => (
       <td key={`score${j}${i}`}>
         {isCounter(i) ? score[i].value.toFixed(0) : score[i].value.toFixed(1)}

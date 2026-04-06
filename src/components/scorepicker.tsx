@@ -29,7 +29,9 @@ const ScorePicker: React.FC<ScorePickerProps> = (props) => {
       active={props.value === i}
       onClick={() => handleChange(i)}
     >
-      {i.toFixed(1)}
+      {Number.isInteger(i) && !props.isExtra && !props.customValues
+        ? i.toFixed(0)
+        : i.toFixed(1)}
     </Button>
   ));
 
